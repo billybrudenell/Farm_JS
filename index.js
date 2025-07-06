@@ -9,7 +9,7 @@ const context = canvas.getContext("2d");
 context.fillStyle = "green";
 context.fillRect(0, 0, canvas.width, canvas.height);
 export var goat_pos = { x: 0, y: 0 };
-export var player_pos = { x: 0, y: 0 };
+export var player_pos = { x: canvas.width, y: canvas.height };
 export var mouse_pos = { x: 0, y: 0 };
 
 canvas.addEventListener("mousemove", (event) => {
