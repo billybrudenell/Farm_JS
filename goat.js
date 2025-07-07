@@ -17,20 +17,17 @@ export default function init_goats(
   height = height_in;
   context = context_in;
   for (let i = 0; i < number_of_goats; i++) {
-    console.log("hello");
-    goat_array.add({
+    goat_array.push({
       x: Math.random() * width,
       y: Math.random() * height,
     });
   }
-  console.log(goat_array);
   updateGoat();
 }
 
 function updateGoat(time = 0) {
   console.log(goat_array);
   goat_array.forEach((goat_pos) => {
-    console.log(goat_pos);
     const dx = goat_pos.x - player_pos.x;
     const dy = goat_pos.y - player_pos.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
@@ -41,6 +38,7 @@ function updateGoat(time = 0) {
       goat_pos.y += dy / distance;
     } else {
       // Random movement
+      // This does not work for multi goats please fix #Issue 1
       angle_timer += 1;
       if (angle_timer >= 60) {
         angle = Math.random() * 2 * Math.PI; // Change direction every 30 frames
@@ -52,11 +50,8 @@ function updateGoat(time = 0) {
       goat_pos.y += Math.sin(angle) * speed;
     }
 
-    // Adjust Canvas boundaries
-    console.log("goat_pos", goat_pos);
     goat_pos.x = Math.max(0, Math.min(width - 10, goat_pos.x));
     goat_pos.y = Math.max(0, Math.min(height - 10, goat_pos.y));
-    console.log("goat_pos", goat_pos);
   });
 
   requestAnimationFrame(updateGoat);

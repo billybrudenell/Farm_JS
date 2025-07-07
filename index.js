@@ -27,6 +27,11 @@ function draw() {
 
   context.fillStyle = "red";
   context.fillRect(player_pos.x, player_pos.y, 10, 10);
+
+  goat_array.forEach((goat_location) => {
+    context.fillStyle = "black";
+    context.fillRect(goat_location.x, goat_location.y, 10, 10);
+  });
 }
 function update(time = 0) {
   draw();
