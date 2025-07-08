@@ -18,6 +18,7 @@ export default function init_goats(
       y: Math.random() * height,
       speed: getRandomSpeed(),
       angle: getRandomAngle(),
+      radius: 7
     });
   }
   updateGoat();
@@ -40,8 +41,8 @@ function updateGoat(time = 0) {
     if (distance < width / 4) {
       goat.x += dx / distance;
       goat.y += dy / distance;
-      goat.speed = getRandomSpeed();
-      goat.angle = getRandomAngle();
+      // goat.speed = getRandomSpeed();
+      // goat.angle = getRandomAngle();
     } else {
       if (moveCounter >= moveInterval) {
         goat.speed = getRandomSpeed();
@@ -50,14 +51,45 @@ function updateGoat(time = 0) {
       }
       goat.x += Math.cos(goat.angle) * goat.speed;
       goat.y += Math.sin(goat.angle) * goat.speed;
+
+      if (goat.x < 0 || goat.x > width-10 || goat.y < 0 || goat.y > height-10) {
+        goat.angle = (goat.angle + Math.PI) % (2 * Math.PI);
+        goat.x += Math.cos(goat.angle) * goat.speed;
+        goat.y += Math.sin(goat.angle) * goat.speed;
+      }
+
     }
 
     goat.x = Math.max(0, Math.min(width - 10, goat.x));
     goat.y = Math.max(0, Math.min(height - 10, goat.y));
+
+    resolveOverlap(goat, goat_array);
   });
 
   requestAnimationFrame(updateGoat);
 }
 
 const getRandomAngle = () => Math.random() * 2 * Math.PI;
-const getRandomSpeed = () => (Math.random() < 0.5 ? 4 : 0);
+const getRandomSpeed = () => (Math.random() < 0.8 ? 0.7 : 0);
+
+
+function resolveOverlap(npc, others) {
+  for (let other of others) {
+    if (npc === other) continue;
+    const dx = npc.x - other.x;
+    const dy = npc.y - other.y;
+    const dist = Math.sqrt(dx **2 + dy **2);
+    const minDist = npc.radius;
+
+    if (dist < minDist) {
+      const overlap = minDist - dist;
+      const pushX = (dx / dist) * (overlap / 2);
+      const pushY = (dy / dist) * (overlap / 2);
+
+      npc.x += pushX;
+      npc.y += pushY;
+      other.x -= pushX;
+      other.y -= pushY;
+    }
+  }
+}
