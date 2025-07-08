@@ -1,5 +1,7 @@
 import { player_pos, goat_array } from "./index.js";
+import { spriteHeight, spriteWidth } from "./spriteHandler.js";
 var context = null;
+var goat_sprite = null;
 var width = 0;
 var height = 0;
 
@@ -7,18 +9,20 @@ export default function init_goats(
   width_in,
   height_in,
   context_in,
-  number_of_goats
+  number_of_goats,
+  goat_sprite_in
 ) {
   width = width_in;
   height = height_in;
   context = context_in;
+  goat_sprite = goat_sprite_in;
   for (let i = 0; i < number_of_goats; i++) {
     goat_array.push({
       x: Math.random() * width,
       y: Math.random() * height,
       speed: getRandomSpeed(),
       angle: getRandomAngle(),
-      radius: 7
+      radius: 7,
     });
   }
   updateGoat();
@@ -37,6 +41,9 @@ function updateGoat(time = 0) {
     const dx = goat.x - player_pos.x;
     const dy = goat.y - player_pos.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
+    if (goat.speed == 0) {
+      goat_sprite.running = false;
+    }
 
     if (distance < width / 4) {
       goat.x += dx / distance;
@@ -52,16 +59,20 @@ function updateGoat(time = 0) {
       goat.x += Math.cos(goat.angle) * goat.speed;
       goat.y += Math.sin(goat.angle) * goat.speed;
 
-      if (goat.x < 0 || goat.x > width-10 || goat.y < 0 || goat.y > height-10) {
+      if (
+        goat.x < 0 ||
+        goat.x > width - spriteWidth ||
+        goat.y < 0 ||
+        goat.y > height - spriteHeight
+      ) {
         goat.angle = (goat.angle + Math.PI) % (2 * Math.PI);
         goat.x += Math.cos(goat.angle) * goat.speed;
         goat.y += Math.sin(goat.angle) * goat.speed;
       }
-
     }
 
-    goat.x = Math.max(0, Math.min(width - 10, goat.x));
-    goat.y = Math.max(0, Math.min(height - 10, goat.y));
+    goat.x = Math.max(0, Math.min(width - spriteWidth, goat.x));
+    goat.y = Math.max(0, Math.min(height - spriteHeight, goat.y));
 
     resolveOverlap(goat, goat_array);
   });
@@ -72,13 +83,12 @@ function updateGoat(time = 0) {
 const getRandomAngle = () => Math.random() * 2 * Math.PI;
 const getRandomSpeed = () => (Math.random() < 0.8 ? 0.7 : 0);
 
-
 function resolveOverlap(npc, others) {
   for (let other of others) {
     if (npc === other) continue;
     const dx = npc.x - other.x;
     const dy = npc.y - other.y;
-    const dist = Math.sqrt(dx **2 + dy **2);
+    const dist = Math.sqrt(dx ** 2 + dy ** 2);
     const minDist = npc.radius;
 
     if (dist < minDist) {
