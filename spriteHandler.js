@@ -19,13 +19,19 @@ export default function loadSprite(url, context) {
     }
   }
 
+  function getRunning() {
+    return running;
+  }
+  function setRunning(running_in) {
+    running = running_in;
+  }
+
   function draw(x, y) {
     if (running) {
-      console.log("not running");
-      totalFrames = 1;
-    } else {
-      console.log("lol");
       totalFrames = 9;
+    } else {
+      totalFrames = 1;
+      currentFrame = 0;
     }
     context.drawImage(
       spriteSheet,
@@ -39,5 +45,5 @@ export default function loadSprite(url, context) {
       spriteHeight / 2
     );
   }
-  return { update, draw, running };
+  return { update, draw, getRunning, setRunning };
 }

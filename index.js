@@ -1,7 +1,7 @@
 import startFarmer from "./farmer.js";
 import init_goat from "./goat.js";
 import loadSprite from "./spriteHandler.js";
-const number_of_goats = 1000;
+const number_of_goats = 4;
 
 const canvas = document.getElementById("canvas");
 canvas.width = screen.width / 2;

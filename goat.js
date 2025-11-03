@@ -41,9 +41,6 @@ function updateGoat(time = 0) {
     const dx = goat.x - player_pos.x;
     const dy = goat.y - player_pos.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
-    if (goat.speed == 0) {
-      goat_sprite.running = false;
-    }
 
     if (distance < width / 4) {
       goat.x += dx / distance;
